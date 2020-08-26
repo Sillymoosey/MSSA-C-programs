@@ -1,52 +1,154 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
+using System.Dynamic;
+using System.Globalization;
 
-namespace Pie
+namespace EX9A
 {
     class Program
     {
-        //creates Random double
-        static (double, double) Rand(Random r)
+        static void GuessingComputer()
         {
+            Random num = new Random();
+            int answer = Convert.ToInt32(num.Next(0, 1000));
+            Console.WriteLine("Now it is the computers turn!");
+            int count = 0;
+            int min = 0;
+            int max = 1000;
+            while (min <= max)
+            {
+                int mid = (min + max) / 2;
+                if (answer == mid)
+                {
+                    Console.WriteLine($"The Computers guess {mid} was just right! it took {count + 1} trys!");
+                    break;
+                }
+                else if (answer < mid)
+                {
+                    Console.WriteLine($"The Computers guess {mid} was too high!");
+                    max = mid - 1;
+                    count++;
+                }
+                else
+                {
+                    Console.WriteLine($"The Computers guess {mid} was too low!");
+                    min = mid + 1;
+                    count++;
+                }
+            }
+        }
+        static void Guessing()
+        {
+            Random num = new Random();
+            int answer = Convert.ToInt32(num.Next(0,1000));
+            Console.WriteLine("You need to guess a number between 0 and 1000.\nInput your number");
+            bool toLarge = false;
+            bool right = false;
+            int count = 0;
+            do
+            {
+                int guess = Convert.ToInt32(Console.ReadLine());
+                if (guess > 1000)
+            {
+                toLarge = true;
+            }
+            while (toLarge == true)
+            {
+                Console.WriteLine("Your number is too large. Select a number between 1 and 10");
+                guess = Convert.ToInt32(Console.ReadLine());
+                if (guess <= 1000)
+                {
+                    toLarge = false;
+                }
+            }
+           
+                if (guess == answer)
+                {
+                    Console.WriteLine($"Your guess {guess}, was correct it took {count + 1} trys!");
+                    right = true;
+                    
+                }
+                else if (guess < answer)
+                {
+                    Console.WriteLine("Your a little low there bud...");
+                    count++;
+                }
+                else
+                {
+                    Console.WriteLine("Shooting for the stars, bring it down a lil...");
+                    count++;
+                }
+            } while (right == false);
+        }
+        static void Bisect()
+        {
+            bool toLarge = false;
+            int[] list = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            Console.WriteLine("select a number between 1 and 10");
+            int value = Convert.ToInt32(Console.ReadLine());
 
-            double rDouble =  r.NextDouble();
-            double r1Double = r.NextDouble();
-            return (rDouble, r1Double);
+            // check to ensure proper number is used
+            if(value > 10)
+            {
+                toLarge = true;
+            }
+            while (toLarge == true)
+            {
+                    Console.WriteLine("Your number is too large. Select a number between 1 and 10");
+                    value = Convert.ToInt32(Console.ReadLine());
+                    if(value <= 10)
+                    {
+                        toLarge = false;
+                    }
+            }
+            
+            int i = list.Length - 1;
+            int j = 0;
+
+            Console.WriteLine(BinarySearch(list, value, j, i));
+            
         }
-        //does the math for the hypotenuse
-        static double Hyp(double x, double y)
+        public static object BinarySearch(int[] input, int key, int min, int max)
         {
-            double c = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
-            return c;
+            while (min <= max)
+            {
+                 int mid = (min + max) / 2;
+                 if (key == input[mid])
+                 {
+                    return $"The computer is looking at {mid + 1} the number is {key} congrats!";
+                   
+                 }
+                 else if (key < input[mid])
+                 {
+                    Console.WriteLine($"The computer is looking at {mid + 1} the number is {key} it's too high!");
+                     max = mid - 1;
+                 }
+                 else
+                 {
+                    Console.WriteLine($"The computer is looking at {mid + 1} the number is {key} it's too low!");
+                    min = mid + 1;
+                 }
+            }
+                return "null";
         }
-        //the while loop counter
+
         static void Main(string[] args)
         {
-            Random r = new Random();
-            double pie = 0;
-            int iterations = 0;
-            int inCircleCount = 0;
-            while (iterations < 10000000)
+            try
             {
-                iterations++;
-                //assign random floating points to x and y
-                (double x, double y) = Rand(r);
-                double inCircle = Hyp(x, y);
-                //the in circle numbers counters and equation
-                if (inCircle <= 1)
-                {
-                    inCircleCount++;
-                }
-                pie = inCircleCount / (double)iterations * 4;
-
+                Bisect();
+                Guessing();
+                GuessingComputer();
             }
-            Console.WriteLine($"Monty Carlo method of pie is {pie}, and regular pie is {Math.PI}");
-           //40, 400, 4000.... why is this happening!
-           //if we switch it up to pie = incricle... I get 4 everytime? where is the math going wrong?
-           // so if we change to input to just inCircle <= 1 now i get new number all of wich are multipuls of 4... is it supposed to equal PI?
-           // figured it out difference means subtraction of course! now I get 3.14!
-           //no it was actually that i forgot to make iterations into a double DUH!
-
+            catch(Exception eX)
+            {
+                
+                Console.WriteLine(eX.Message);
+            }
+            finally
+            {
+                Console.WriteLine("hit any key to end the program");
+                Console.ReadLine();
+            }
         }
     }
 }
